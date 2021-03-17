@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%=file_name%>
+    </title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lexend+Mega&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <script src="js/app.js"></script>
+    <div id="decoImg">
+        <div class="font">Create notes fast and modify them even faster
+        </div>
+        <div class="curr_dir">
+            <div class="search_box">
+                <input id="dir" placeholder="Search for a tag..." type="text">
+                <i class="fa fa-search" aria-hidden="true" id="search_icon_2"></i>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="title">What would you like to do?</div>
+        <div class="flex-row">
+            <a href="/file/<%=file_name%>/create_note" method=GET>
+                <div>
+                    <img src="https://inovasys.co/themes/inovasys/assets/img/icons/security/visiblity-of-insights.png"
+                        alt="create">
+                </div>
+                <text>
+                    <div>Create</div><text>Create notes using in built tools or take note taking to the next level by
+                        using html and css.</text>
+                </text>
+            </a>
+            <a href="/file/<%=file_name%>/edit_note">
+                <div>
+                    <img src="https://image.flaticon.com/icons/png/512/1276/1276691.png" alt="edit">
+                </div>
+                <text>
+                    <div>Edit</div><text>Made a mistake in a previous note? No stress, simply edit your notes.</text>
+                </text>
+            </a>
+            <a href="/file/<%=file_name%>/delete_note">
+                <div>
+                    <img src="https://maxcdn.icons8.com/Share/icon/nolan/Editing/delete1600.png" alt="delete">
+                </div>
+                <text>
+                    <div>delete</div><text>You got a note that is no longer useful, simply delete the note and move
+                        on.</text>
+                </text>
+            </a>
+            <a href="/file/<%=file_name%>/view_note">
+                <div>
+                    <img src="https://image.flaticon.com/icons/png/512/2151/2151694.png" alt="view">
+                </div>
+                <text>
+                    <div>view</div><text>You have created your notes, its high time you take a look at them.</text>
+                </text>
+            </a>
+
+        </div>
+    </div>
+    
+
+</body>
+
+</html>

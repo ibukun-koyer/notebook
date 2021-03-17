@@ -1,0 +1,208 @@
+@font-face{
+	font-family:"Aclonica-Regular";
+	src: url("/fonts-main/apache/aclonica/Aclonica-Regular.ttf");
+}
+@font-face{
+	font-family:"Arimo";
+	src: url("/fonts-main/apache/arimo/Arimo[wght].ttf");
+}
+@font-face{
+	font-family:"Calligraffitti-Regular";
+	src: url("/fonts-main/apache/calligraffitti/Calligraffitti-Regular.ttf");
+}
+@font-face{
+	font-family:"CherryCreamSoda-Regular";
+	src: url("/fonts-main/apache/cherrycreamsoda/CherryCreamSoda-Regular.ttf");
+}
+@font-face{
+	font-family:"Chewy-Regular";
+	src: url("/fonts-main/apache/chewy/Chewy-Regular.ttf");
+}
+@font-face{
+	font-family:"ComingSoon-Regular";
+	src: url("/fonts-main/apache/comingsoon/ComingSoon-Regular.ttf");
+}
+@font-face{
+	font-family:"Cousine-Regular";
+	src: url("/fonts-main/apache/cousine/Cousine-Regular.ttf");
+}
+@font-face{
+	font-family:"CraftyGirls-Regular";
+	src: url("/fonts-main/apache/craftygirls/CraftyGirls-Regular.ttf");
+}
+@font-face{
+	font-family:"CreepsterCaps-Regular";
+	src: url("/fonts-main/apache/creepstercaps/CreepsterCaps-Regular.ttf");
+}
+@font-face{
+	font-family:"Crushed-Regular";
+	src: url("/fonts-main/apache/crushed/Crushed-Regular.ttf");
+}
+@font-face{
+	font-family:"FontdinerSwanky-Regular";
+	src: url("/fonts-main/apache/fontdinerswanky/FontdinerSwanky-Regular.ttf");
+}
+@font-face{
+	font-family:"HomemadeApple-Regular";
+	src: url("/fonts-main/apache/homemadeapple/HomemadeApple-Regular.ttf");
+}
+@font-face{
+	font-family:"IrishGrover-Regular";
+	src: url("/fonts-main/apache/irishgrover/IrishGrover-Regular.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmbx10";
+	src: url("/fonts-main/apache/jsmathcmbx10/jsMath-cmbx10.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmex10";
+	src: url("/fonts-main/apache/jsmathcmex10/jsMath-cmex10.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmmi10";
+	src: url("/fonts-main/apache/jsmathcmmi10/jsMath-cmmi10.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmr10";
+	src: url("/fonts-main/apache/jsmathcmr10/jsMath-cmr10.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmsy10";
+	src: url("/fonts-main/apache/jsmathcmsy10/jsMath-cmsy10.ttf");
+}
+@font-face{
+	font-family:"jsMath-cmti10";
+	src: url("/fonts-main/apache/jsmathcmti10/jsMath-cmti10.ttf");
+}
+@font-face{
+	font-family:"JustAnotherHand-Regular";
+	src: url("/fonts-main/apache/justanotherhand/JustAnotherHand-Regular.ttf");
+}
+@font-face{
+	font-family:"Kranky-Regular";
+	src: url("/fonts-main/apache/kranky/Kranky-Regular.ttf");
+}
+@font-face{
+	font-family:"LuckiestGuy-Regular";
+	src: url("/fonts-main/apache/luckiestguy/LuckiestGuy-Regular.ttf");
+}
+@font-face{
+	font-family:"MaidenOrange-Regular";
+	src: url("/fonts-main/apache/maidenorange/MaidenOrange-Regular.ttf");
+}
+@font-face{
+	font-family:"Montez-Regular";
+	src: url("/fonts-main/apache/montez/Montez-Regular.ttf");
+}
+@font-face{
+	font-family:"MountainsofChristmas-Regular";
+	src: url("/fonts-main/apache/mountainsofchristmas/MountainsofChristmas-Regular.ttf");
+}
+@font-face{
+	font-family:"Nokora-Regular";
+	src: url("/fonts-main/apache/nokora/Nokora-Regular.ttf");
+}
+@font-face{
+	font-family:"OpenSans";
+	src: url("/fonts-main/apache/opensans/OpenSans[wdth,wght].ttf");
+}
+@font-face{
+	font-family:"OpenSansCondensed-Light";
+	src: url("/fonts-main/apache/opensanscondensed/OpenSansCondensed-Light.ttf");
+}
+@font-face{
+	font-family:"OpenSansHebrew-Light";
+	src: url("/fonts-main/apache/opensanshebrew/OpenSansHebrew-Light.ttf");
+}
+@font-face{
+	font-family:"OpenSansHebrew-Regular";
+	src: url("/fonts-main/apache/opensanshebrew/OpenSansHebrew-Regular.ttf");
+}
+@font-face{
+	font-family:"OpenSansHebrewCondensed-Light";
+	src: url("/fonts-main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Light.ttf");
+}
+@font-face{
+	font-family:"OpenSansHebrewCondensed-Regular";
+	src: url("/fonts-main/apache/opensanshebrewcondensed/OpenSansHebrewCondensed-Regular.ttf");
+}
+@font-face{
+	font-family:"PermanentMarker-Regular";
+	src: url("/fonts-main/apache/permanentmarker/PermanentMarker-Regular.ttf");
+}
+@font-face{
+	font-family:"Rancho-Regular";
+	src: url("/fonts-main/apache/rancho/Rancho-Regular.ttf");
+}
+@font-face{
+	font-family:"Redressed-Regular";
+	src: url("/fonts-main/apache/redressed/Redressed-Regular.ttf");
+}
+@font-face{
+	font-family:"Roboto";
+	src: url("/fonts-main/apache/roboto/Roboto[wdth,wght].ttf");
+}
+@font-face{
+	font-family:"RobotoMono";
+	src: url("/fonts-main/apache/robotomono/RobotoMono[wght].ttf");
+}
+@font-face{
+	font-family:"RobotoSlab";
+	src: url("/fonts-main/apache/robotoslab/RobotoSlab[wght].ttf");
+}
+@font-face{
+	font-family:"Rochester-Regular";
+	src: url("/fonts-main/apache/rochester/Rochester-Regular.ttf");
+}
+@font-face{
+	font-family:"RockSalt-Regular";
+	src: url("/fonts-main/apache/rocksalt/RockSalt-Regular.ttf");
+}
+@font-face{
+	font-family:"Satisfy-Regular";
+	src: url("/fonts-main/apache/satisfy/Satisfy-Regular.ttf");
+}
+@font-face{
+	font-family:"Schoolbell-Regular";
+	src: url("/fonts-main/apache/schoolbell/Schoolbell-Regular.ttf");
+}
+@font-face{
+	font-family:"Slackey-Regular";
+	src: url("/fonts-main/apache/slackey/Slackey-Regular.ttf");
+}
+@font-face{
+	font-family:"Smokum-Regular";
+	src: url("/fonts-main/apache/smokum/Smokum-Regular.ttf");
+}
+@font-face{
+	font-family:"SpecialElite-Regular";
+	src: url("/fonts-main/apache/specialelite/SpecialElite-Regular.ttf");
+}
+@font-face{
+	font-family:"Sunshiney-Regular";
+	src: url("/fonts-main/apache/sunshiney/Sunshiney-Regular.ttf");
+}
+@font-face{
+	font-family:"Syncopate-Regular";
+	src: url("/fonts-main/apache/syncopate/Syncopate-Regular.ttf");
+}
+@font-face{
+	font-family:"Tinos-Regular";
+	src: url("/fonts-main/apache/tinos/Tinos-Regular.ttf");
+}
+@font-face{
+	font-family:"Ultra-Regular";
+	src: url("/fonts-main/apache/ultra/Ultra-Regular.ttf");
+}
+@font-face{
+	font-family:"Unkempt-Regular";
+	src: url("/fonts-main/apache/unkempt/Unkempt-Regular.ttf");
+}
+@font-face{
+	font-family:"WalterTurncoat-Regular";
+	src: url("/fonts-main/apache/walterturncoat/WalterTurncoat-Regular.ttf");
+}
+@font-face{
+	font-family:"Yellowtail-Regular";
+	src: url("/fonts-main/apache/yellowtail/Yellowtail-Regular.ttf");
+}

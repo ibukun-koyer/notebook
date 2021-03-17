@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>file choose</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/error.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lexend+Mega&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+</head>
+
+
+<body>
+    <!-- page name should go here -->
+    <script>const names_of_files = [];</script>
+
+    <%for (let val of info){%>
+        <script>names_of_files.push('<%-JSON.stringify(val)%>');</script>
+        <%}%>
+
+            <div class="sticky">
+                <div class="search_box">
+                    <div class="space"></div>
+                    <input type="text" placeholder="Search for a notebook..." name="file_name" spellcheck="false">
+                    <div class="results invisible"></div>
+                    <i class="fa fa-search" aria-hidden="true" id="search_icon_1"></i>
+
+                </div>
+                <div class="curr_dir">
+
+                    <div class="search_box">
+                        <input id="dir" value="<%=curr_dir%>" placeholder="Enter a directory/file path..." type="text">
+                        <i class="fa fa-search" aria-hidden="true" id="search_icon_2"></i>
+                    </div>
+                </div>
+
+                <div class="wrapper">
+                    <div class="options">
+                        <div class="main_options">
+                            <span id="c_dir"><i class="fa fa-folder" aria-hidden="true"></i> create directory</span>
+                            <span id="c_file"><i class="fa fa-file" aria-hidden="true"></i> create file</span>
+                            <span id="select"><i class="fa fa-trash" aria-hidden="true"></i>
+                                <div>select</div>
+                            </span>
+                        </div>
+                        <div class="sort">
+                            <span><i class="fa fa-sort" aria-hidden=" true"></i>
+                                <select name="sort" id="sort">
+                                    <option value="alp_asc">Alpha ascending order</option>
+                                    <option value="alp_des">Alpha descending order</option>
+                                    <option value="size_asc">Size ascending order</option>
+                                    <option value="size_des">Size descending order</option>
+                                    <option value="time_asc">Time ascending order</option>
+                                    <option value="time_des">Time descending order</option>
+
+
+
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%if (info.length !==0){%>
+                <div class="table">
+                    <div class="header">
+                        <div class="name">
+                            file name
+                        </div>
+                        <div class="ctime">
+                            creation time
+                        </div>
+                        <div class="size">
+                            size
+                        </div>
+                    </div>
+                    <div class="body">
+
+                        <%for (let i=0; i < info.length; i++){%>
+                            <div class="row">
+                                <div class="name">
+                                    <%if ((info[i].file_name.indexOf(".")===-1)||(info[i].file_name===".." )){%>
+                                        <%if (info[i].file_name===".." ){%>
+                                            <i class="fa fa-folder" aria-hidden="true"></i><a
+                                                href="/folder/parent/directory">
+                                                <%}else{%>
+                                                    <i class="fa fa-folder" aria-hidden="true"></i><a
+                                                        href="/folder/<%=info[i].file_name%>">
+                                                        <%}%>
+                                                            <%}else{%>
+                                                                <i class="fa fa-file" aria-hidden="true"></i><a
+                                                                    href="/file/<%=info[i].file_name%>">
+                                                                    <%}%>
+                                                                        <%=info[i].file_name%>
+                                                                </a>
+
+                                </div>
+                                <div class="ctime">
+                                    <%=info[i].ctime%>
+                                </div>
+                                <div class="size">
+                                    <%if ((info[i].file_name.indexOf(".")!==-1)&&(info[i].file_name!==".." )){%>
+                                        <%=info[i].file_size%> bytes
+                                            <%}%>
+
+                                </div>
+                            </div>
+                            <%}%>
+                    </div>
+                </div>
+                <%if (error.length===3 ){%>
+                    <div class="fixed">
+                        <div class="error">
+                            <div class="notFound">
+                                <%=error[0]%>: <%=error[1]%>
+                            </div>
+                            <div class="feedback">
+                                <div>
+                                    <%=error[2]%>
+                                </div>
+                                <form action="/" method="GET">
+                                    <button class="btn">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <%}%>
+                        <%}%>
+                            <%if (info.length===0){%>
+                                <div class="empty">
+                                    <!-- <div class="img"></div> -->
+                                    <div>It is a bit empty in here</div>
+                                </div>
+                                <%}%>
+
+                                    <script src="js/app.js"></script>
+
+</body>
+
+</html>
