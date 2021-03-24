@@ -3,6 +3,8 @@ const path = require("path");
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 //requiring and setting engine to ejs
 app.set("view engine", "ejs");
 const ejsMate = require("ejs-mate");
@@ -365,36 +367,23 @@ app.route("/file/:name")
 app.get("/file/:name/create_note/paper", (req, res) => {
     res.render("paper");
 })
-app.get("/file/:name/create_note/read_css", async (req, res) => {
-    let data = await fs.readFile("./public/css/user_css.css");
-    let out = "";
-    try {
+app.post("/file/:name/create_note/save", async (req, res) => {
 
-        out = [...data].map((e) => { return String.fromCharCode(e) }).reduce((string = "", e) => { return string + e; });
+    try {
+        let out = await read(note_dir, req.params.name);
+        out.data[req.body.name] = { css: req.body.css, html: req.body.html };
+        await fs.writeFile(note_dir + "/" + req.params.name, JSON.stringify(out));
         res.send(out);
     }
     catch (e) {
+
         res.status(500).json({ error: e });
 
     }
 
 })
 
-app.post("/file/:name/create_note/post_css", async (req, res) => {
 
-    let data;
-    try {
-        data = await fs.writeFile("./public/css/user_css.css", req.body.css);
-        res.send("");
-
-    }
-    catch (e) {
-        res.status(500).json({
-            error: e
-        });
-    }
-
-})
 app.route("/file/:name/create_note")
     .get(async (req, res, next) => {
         let data = await read(__dirname, "/font.txt");

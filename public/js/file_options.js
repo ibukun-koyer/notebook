@@ -1,3 +1,74 @@
+//holder values for papers document and paper data
+let frame_doc;
+let frame_win;
+let paper_data;
+let curr_file = document.URL.split("/").reduce((x, y) => {
+    if (y.indexOf(".notes") !== -1) {
+        return x += y;
+    }
+    else {
+        return x;
+    }
+}).slice(5,);
+console.log(`The file name is ${curr_file}`)
+const tools = {
+    surround(body, tag) {
+
+        let sel = frame_doc.getSelection();
+        console.dir(sel);
+        if (frame_doc.getSelection().isCollapsed !== true) {
+            for (let i = 0; i < sel.rangeCount; i++) {
+                let startNode = sel.anchorNode;
+                let startIndex = sel.anchorOffset;
+                let endNode = sel.focusNode;
+                let endIndex = sel.focusOffset;
+
+                while ((startNode !== null)) {
+                    // sel.getRangeAt(i).surroundContents(tag);
+
+
+                    const range = new Range();
+                    if (startIndex !== null)
+                        range.setStart(startNode, startIndex);
+                    else
+                        range.setStart(startNode, 0);
+                    startIndex = null;
+
+                    if ((startNode.nextSibling === endNode) || (startNode.nextSibling === null))
+                        range.setEnd(startNode, endIndex);
+                    else
+                        range.setEnd(startNode, startNode.length);
+
+
+
+                    frame_win.getSelection().removeAllRanges();
+                    frame_win.getSelection().addRange(range);
+                    console.log(range);
+                    sel.getRangeAt(0).surroundContents(tag);
+
+                    startNode = startNode.nextSibling;
+
+                }
+
+            }
+        }
+        else {
+            for (let i = 0; i < sel.rangeCount; i++) {
+                sel.getRangeAt(i).insertNode(tag);
+
+            }
+
+        }
+        body.focus();
+
+        //use appendnextsibling every time a tool is turned off
+    },
+    bold(body) {
+        const tag = document.createElement("b");
+        tools.surround(body, tag);
+
+    }
+}
 
 
 let currently_selected = home;
@@ -9,8 +80,9 @@ const single_tag = ["<area>", "<base>", "<br>", "<col>", "<command>", "<embed>",
 const size_of_divide = 0.3;
 const layout_height_template = "100vh - 4.25rem ";
 let curr_font_size = 72;
+let css_input = "";
 
-const create_icon = function (name, label, side_border = false) {
+const create_icon = function (fxn, name, label, side_border = false) {
     const i = document.createElement("i");
     i.setAttribute("aria-hidden", true);
     i.classList.add("icon");
@@ -25,10 +97,15 @@ const create_icon = function (name, label, side_border = false) {
         for (let cls of name) {
             i.classList.add(cls);
         }
+
     }
     catch (e) {
         console.error(e);
     }
+    i.addEventListener("click", () => {
+        console.log(fxn);
+        fxn(paper_data);
+    })
     return i;
 }
 const brk = function () {
@@ -46,13 +123,13 @@ const subregion = function (text, br, ...rest) {
             val++;
             if (rest[i].do_not_calc !== true) {
                 if ((val >= br) || (i === rest.length - 1)) {
-                    reg.append(create_icon(rest[i]["classList"], rest[i]["label"]));
+                    reg.append(create_icon(rest[i]["fxn"], rest[i]["classList"], rest[i]["label"]));
                     reg.append(brk());
 
                     val = 0;
                 }
                 else {
-                    reg.append(create_icon(rest[i]["classList"], rest[i]["label"], true));
+                    reg.append(create_icon(rest[i]["fxn"], rest[i]["classList"], rest[i]["label"], true));
                 }
             }
             else {
@@ -79,9 +156,10 @@ const sub_subregion = function (...rest) {
     return outer;
 }
 class icon_info {
-    constructor(classList, label) {
+    constructor(classList, label, fxn) {
         this.classList = classList;
         this.label = label;
+        this.fxn = fxn;
     }
 }
 function drop_down_options(options, name) {
@@ -103,32 +181,32 @@ const opt = document.querySelector(".major-options");
 function home() {
     const target = document.querySelector(".target");
     target.innerHTML = "";
-    const center = new icon_info(["fas", "fa-align-center"], "center align");
-    const justify = new icon_info(["fas", "fa-align-justify"], "justify align");
-    const left = new icon_info(["fas", "fa-align-left"], "left align");
-    const right = new icon_info(["fas", "fa-align-right"], "right align");
-    const bold = new icon_info(["fas", "fa-bold"], "bold");
-    const border = new icon_info(["fas", "fa-border-all"], "border");
-    const paste = new icon_info(["fas", "fa-clipboard"], "clipboard");
-    const heading = new icon_info(["fas", "fa-heading"], "heading");
-    const highlight = new icon_info(["fas", "fa-highlighter"], "highlight");
-    const italic = new icon_info(["fas", "fa-italic"], "italic");
-    const link = new icon_info(["fas", "fa-link"], "link");
-    const ol = new icon_info(["fas", "fa-list-ol"], "ordered list");
-    const ul = new icon_info(["fas", "fa-list-ul"], "unordered list");
-    const paragraph = new icon_info(["fas", "fa-paragraph"], "paragraph");
-    const print = new icon_info(["fas", "fa-print"], "print");
-    const subscript = new icon_info(["fas", "fa-subscript"], "subscript");
-    const superscript = new icon_info(["fas", "fa-superscript"], "superscript");
-    const text_height = new icon_info(["fas", "fa-text-height"], "text height");
-    const text_width = new icon_info(["fas", "fa-text-width"], "text width");
-    const underline = new icon_info(["fas", "fa-underline"], "underline");
-    const undo = new icon_info(["fas", "fa-undo"], "undo");
-    const redo = new icon_info(["fas", "fa-redo"], "redo");
-    const copy = new icon_info(["far", "fa-copy"], "copy");
-    const cut = new icon_info(["fas", "fa-cut"], "cut");
-    const table = new icon_info(["fas", "fa-table"], "table");
-    const strikethrough = new icon_info(["fa", "fa-strikethrough"], "strike through");
+    const center = new icon_info(["fas", "fa-align-center"], "center align", tools.center_align);
+    const justify = new icon_info(["fas", "fa-align-justify"], "justify align", tools.justify_align);
+    const left = new icon_info(["fas", "fa-align-left"], "left align", tools.left_align);
+    const right = new icon_info(["fas", "fa-align-right"], "right align", tools.right_align);
+    const bold = new icon_info(["fas", "fa-bold"], "bold", tools.bold);
+    const border = new icon_info(["fas", "fa-border-all"], "border", tools.border);
+    const paste = new icon_info(["fas", "fa-clipboard"], "clipboard", tools.clipboard);
+    const heading = new icon_info(["fas", "fa-heading"], "heading", tools.heading);
+    const highlight = new icon_info(["fas", "fa-highlighter"], "highlight", tools.highlight);
+    const italic = new icon_info(["fas", "fa-italic"], "italic", tools.italic);
+    const link = new icon_info(["fas", "fa-link"], "link", tools.link);
+    const ol = new icon_info(["fas", "fa-list-ol"], "ordered list", tools.ol);
+    const ul = new icon_info(["fas", "fa-list-ul"], "unordered list", tools.ul);
+    const paragraph = new icon_info(["fas", "fa-paragraph"], "paragraph", tools.paragraph);
+    const print = new icon_info(["fas", "fa-print"], "print", tools.print);
+    const subscript = new icon_info(["fas", "fa-subscript"], "subscript", tools.subscript);
+    const superscript = new icon_info(["fas", "fa-superscript"], "superscript", tools.superscript);
+    const text_height = new icon_info(["fas", "fa-text-height"], "text height", tools.text_height);
+    const text_width = new icon_info(["fas", "fa-text-width"], "text width", tools.text_width);
+    const underline = new icon_info(["fas", "fa-underline"], "underline", tools.underline);
+    const undo = new icon_info(["fas", "fa-undo"], "undo", tools.undo);
+    const redo = new icon_info(["fas", "fa-redo"], "redo", tools.redo);
+    const copy = new icon_info(["far", "fa-copy"], "copy", tools.copy);
+    const cut = new icon_info(["fas", "fa-cut"], "cut", tools.cut);
+    const table = new icon_info(["fas", "fa-table"], "table", tools.table);
+    const strikethrough = new icon_info(["fa", "fa-strikethrough"], "strike through", tools.strike_through);
     //more icons to find
     //--->calculator icon for calculator functionality
     //--->map icon for map functionality
@@ -439,10 +517,11 @@ function implement_css_parse(str) {
 }
 
 document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoaded', (e) => {
-    const frame_doc = document.querySelector("iframe").contentDocument;
-    const frame_win = document.querySelector("iframe").contentWindow;
-    const paper_data = document.querySelector("iframe").contentDocument.querySelector("#p_data");
-    console.dir(paper_data);
+    frame_doc = document.querySelector("iframe").contentDocument;
+    frame_win = document.querySelector("iframe").contentWindow;
+    paper_data = document.querySelector("iframe").contentDocument.querySelector("#p_data");
+
+    let temp_innerhtml = "";
     //currently selected
     let current = document.querySelector("#outline");
     for (let btn of code_btn) {
@@ -451,42 +530,71 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
             btn.setAttribute("id", "outline");
             current = btn;
             if (btn.name === "html") {
-                codearea.value = stack(paper_data.innerHTML);
+                if (paper_data.innerHTML.length !== 0) {
+                    codearea.value = stack(paper_data.innerHTML);
+                }
+                else {
+                    codearea.value = stack(temp_innerhtml);
+                }
             }
             else {
-                const stylesheet = document.querySelector("iframe").contentDocument.head.style;
-                axios.get("http://localhost:3000/file/o.notes/create_note/read_css")
-                    .then((res) => {
-                        codearea.value = implement_css_parse(res.data);
-                    })
-                    .catch((err) => {
-                        codearea.value = "FAILED TO READ CSS FILE!!!"
-                    })
+
+                codearea.value = implement_css_parse(css_input);
+
 
             }
         })
     }
 
     paper_data.addEventListener("input", (e) => {
+
+        console.log(frame_doc.getSelection());
+        if (frame_doc.getSelection().isCollapsed === true) {
+            try {
+                if (frame_doc.getSelection().anchorNode.nextSibling.innerHTML.length === 0) {
+                    if (frame_doc.getSelection().anchorNode.length === frame_doc.getSelection().anchorOffset) {
+                        // frame_doc.getSelection().anchorNode.nextSibling.innerHTML += e.data;
+
+                        const offset = frame_doc.getSelection().anchorOffset;
+                        const range = new Range();
+                        console.log(e.data.length);
+                        range.setStart(frame_doc.getSelection().anchorNode, offset - e.data.length);
+
+                        range.setEnd(frame_doc.getSelection().anchorNode, offset);
+                        frame_win.getSelection().removeAllRanges();
+                        frame_win.getSelection().addRange(range);
+                        // console.log(range);
+                        frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
+
+                        const range1 = new Range();
+                        range1.setStart(frame_doc.getSelection().anchorNode, e.data.length + 1);
+                        range1.collapse(true);
+                        frame_win.getSelection().removeAllRanges();
+                        frame_win.getSelection().addRange(range1);
+
+                        paper_data.focus();
+                        // frame_doc.getSelection().anchorNode.textContent = "";
+                    }
+                }
+
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+
         if (current.name === "html") {
             codearea.value = stack(paper_data.innerHTML);
 
         }
-        if (current.name === "css") {
-            axios.get("http://localhost:3000/file/o.notes/create_note/read_css")
-                .then((res) => {
-                    codearea.value = implement_css_parse(res.data);
-                })
-                .catch((err) => {
-                    codearea.value = "FAILED TO READ CSS FILE!!!"
-                })
-        }
+
     });
 
     codearea.addEventListener("input", (e) => {
 
         if (current.name === "html") {
             paper_data.innerHTML = codearea.value;
+            temp_innerhtml = codearea.value;
 
         }
         if (current.name === "css") {
@@ -495,14 +603,8 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
                 i.remove();
             }
             frame_doc.head.innerHTML += `<style>${codearea.value}</style>`;
+            css_input = codearea.value;
 
-            axios.post('http://localhost:3000/file/o.notes/create_note/post_css', `css=${implement_css_parse(codearea.value)}`)
-                .then(() => {
-                    console.log(codearea.value);
-                })
-                .catch((err) => {
-                    codearea.value = "FAILED TO SAVE TO CSS FILE!!!"
-                })
         }
     });
 
@@ -536,4 +638,131 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
             mouse = false;
         }
     })
+
+
+
+
+})
+//start working on the major-options
+let name_of_note = "";
+function create_form(container, ...options) {
+
+    for (let i of options) {
+        const form = document.createElement("form");
+        form.setAttribute("action", i.path);
+        form.setAttribute("method", "GET");
+        form.classList.add("btn-for-opt");
+        const op = document.createElement("button");
+        op.innerText = i.text;
+
+        form.append(op);
+        container.append(form);
+        if (i.path.indexOf("cancel") !== -1) {
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                container.remove();
+            })
+        }
+        if (i.path.indexOf("save") !== -1) {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                container.remove();
+                if (name_of_note === "") {
+                    click_create("save", i.path);
+
+                    const prompt_form = document.querySelector(".prompt");
+                    prompt_form.addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        if (e.submitter.className.indexOf("green_btn") !== -1) {
+                            name_of_note = document.querySelector(".prompt input").value;
+                            if (name_of_note === "") {
+                                name_of_note = "untitled";
+                            }
+                            const data = { name: name_of_note, css: css_input, html: paper_data.innerHTML };
+                            try {
+                                await axios.post(`/file/${curr_file}/create_note/save`, data);
+                                if (i.path.indexOf("exit") !== -1) {
+
+                                    const redirect_form = document.createElement("form");
+                                    redirect_form.setAttribute("action", `/file/${curr_file}`);
+                                    redirect_form.setAttribute("method", "GET");
+                                    document.body.append(redirect_form);
+                                    redirect_form.style.width = 0;
+                                    redirect_form.style.height = 0;
+
+                                    redirect_form.submit();
+                                }
+                            }
+                            catch (e) {
+                                alert("SAVE FAILED!!!");
+                            }
+                        }
+                        prompt_form.parentElement.remove();
+
+
+                    })
+
+                }
+                else {
+                    const data = { name: name_of_note, css: css_input, html: paper_data.innerHTML };
+                    try {
+                        await axios.post(`/file/${curr_file}/create_note/save`, data);
+                        if (i.path.indexOf("exit") !== -1) {
+
+                            const redirect_form = document.createElement("form");
+                            redirect_form.setAttribute("action", `/file/${curr_file}`);
+                            redirect_form.setAttribute("method", "GET");
+                            document.body.append(redirect_form);
+                            redirect_form.style.width = 0;
+                            redirect_form.style.height = 0;
+
+                            redirect_form.submit();
+                        }
+                    }
+                    catch (e) {
+                        alert("SAVE FAILED!!!");
+                    }
+                }
+
+
+
+            })
+        }
+
+
+
+
+    }
+}
+const major_option = document.querySelector(".major-options");
+let current_selection = major_option.children[0].children[1];
+current_selection.classList.add("wrapAround");
+
+major_option.addEventListener("click", (e) => {
+    if (e.target.localName === "button") {
+        current_selection.classList.remove("wrapAround");
+        current_selection = e.target;
+    }
+    if (e.target.name === "home") {
+        console.log("home");
+    }
+    if (e.target.name === "file") {
+        const fill = document.createElement("div");
+        fill.classList.add("fill");
+        fill.classList.add("save-options");
+        document.body.append(fill);
+        create_form(fill, { path: "save", text: "Save progress" }, { path: "save_and_exit", text: "Save and return" }, { path: "cancel", text: "Cancel" });
+    }
+    if (e.target.name === "insert") {
+        console.log("insert");
+    }
+    if (e.target.name === "layout") {
+        console.log("layout");
+    }
+    if (e.target.name === "help") {
+        console.log("help");
+    }
+    if (e.target.localName === "button") {
+        e.target.classList.add("wrapAround");
+    }
 })
