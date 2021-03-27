@@ -53,23 +53,14 @@ if (note_container !== undefined) {
         wrap_div.setAttribute("id", unique_id);
         //adding text and css
         header.innerText = i.slice(1, i.length - 1);
-        // let str = `.${i.toUpperCase().slice(1, i.length - 1)}.`;
-        // // let start_color = [173, 255, 47];
-        // // let end_color = [229, 206, 246];
-        // let start_color = [128, 0, 128];
-        // let end_color = [255, 123, 255];
-        // const color_arr = gradient(str, start_color, end_color);
-        // //set each char value for the title
-        // for (let i = 0; i < str.length; i++) {
-        //     const char = document.createElement("span");
-        //     char.innerText = str[i];
-        //     char.style.color = `rgb(${color_arr[i]})`;
-        //     header.append(char);
-        // }
 
         note.innerHTML = notes[i].html;
+        for (let i = 0; i < note.childElementCount; i++) {
+            note.children[0].style.boxSizing = "border-box";
+        }
         document.head.innerHTML += `<style>${add_specificity_to_css("#" + unique_id, notes[i].css)}</style>`;
         footer.innerText = int;
         int++;
     }
+
 }
