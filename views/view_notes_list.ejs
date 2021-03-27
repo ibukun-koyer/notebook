@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/view.css">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+    <title>View notes</title>
+
+</head>
+
+<body>
+    <script src="js/app.js"></script>
+
+    <div class="contain_type">
+
+        <form action="/file/<%=file_name%>" method="GET">
+            <button class="big btn"><i class="fas fa-arrow-alt-circle-left"></i> Back</button>
+        </form>
+        <form action="/file/<%=file_name%>/view_notes" method="GET">
+            <input type="hidden" name="view" value="slide">
+            <button class="big btn">Switch to slide view</button>
+        </form>
+    </div>
+    <div class="intro">You are now reading: <span class="high">
+            <%=file_name%>
+        </span></div>
+    <%if (Object.keys(data).length!==0){%>
+        <div class="allNotes">
+            <div class="contain_notes">
+                <!-- to add specificity to the data boxes, use stack implementation
+to check to see that the open bracket is 0 before adding specificity -->
+
+
+                <script>const data = {};</script>
+                <%for (let val in data){%>
+                    <script>data['<%-JSON.stringify(val)%>'] = { css: '<%-JSON.stringify(data[val].css)%>'.trim().slice(1, -1), html: '<%-JSON.stringify(data[val].html)%>'.trim().slice(1, -1) };</script>
+                    <%}%>
+            </div>
+        </div>
+        <%}%>
+            <div class="set_of_icons">
+                <div class="icon">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </div>
+            </div>
+            <script src="js/view_list.js"></script>
+
+</body>
+
+</html>

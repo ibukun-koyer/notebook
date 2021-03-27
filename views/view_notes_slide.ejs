@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/view.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <title>View notes</title>
+</head>
+
+<body>
+    <script src="js/app.js"></script>
+
+    <div class="contain_type">
+
+        <form action="/file/<%=file_name%>/view_notes" method="GET">
+            <input type="hidden" name="view" value="list">
+            <button class="big btn">Switch to list view</button>
+        </form>
+    </div>
+</body>
+
+</html>

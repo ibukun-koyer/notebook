@@ -679,6 +679,7 @@ function create_form(container, ...options) {
                                 name_of_note = "untitled";
                             }
                             const data = { name: name_of_note, css: css_input, html: paper_data.innerHTML };
+                            console.log(data);
                             try {
                                 await axios.post(`/file/${curr_file}/create_note/save`, data);
                                 if (i.path.indexOf("exit") !== -1) {

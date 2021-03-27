@@ -364,6 +364,21 @@ app.route("/file/:name")
             return next(new error(406, "JSON File inputted is not acceptable"));
         }
     })
+app.route("/file/:name/view_notes")
+    .get(async (req, res) => {
+        try {
+            var data = await read(note_dir, req.params.name);
+            if (data.signature !== signature) {
+                throw "";
+            }
+        }
+        catch (e) {
+            return next(new error(406, "JSON File inputted is not acceptable"));
+        }
+
+        res.render(`view_notes_${req.query.view}`, { file_name: req.params.name, data: data.data });
+    })
+
 app.get("/file/:name/create_note/paper", (req, res) => {
     res.render("paper");
 })
