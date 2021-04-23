@@ -678,7 +678,7 @@ function create_form(container, ...options) {
                             if (name_of_note === "") {
                                 name_of_note = "untitled";
                             }
-                            const data = { name: name_of_note, css: css_input, html: paper_data.innerHTML };
+                            const data = { name: name_of_note, css: css_input.replaceAll("'", "\\\""), html: paper_data.innerHTML.replaceAll("'", "\\\"") };
                             console.log(data);
                             try {
                                 await axios.post(`/file/${curr_file}/create_note/save`, data);
@@ -705,7 +705,7 @@ function create_form(container, ...options) {
 
                 }
                 else {
-                    const data = { name: name_of_note, css: css_input, html: paper_data.innerHTML };
+                    const data = { name: name_of_note, css: css_input.replaceAll("'", "\\\""), html: paper_data.innerHTML.replaceAll("'", "\\\"") };
                     try {
                         await axios.post(`/file/${curr_file}/create_note/save`, data);
                         if (i.path.indexOf("exit") !== -1) {

@@ -368,6 +368,7 @@ app.route("/file/:name/view_notes")
     .get(async (req, res) => {
         try {
             var data = await read(note_dir, req.params.name);
+
             if (data.signature !== signature) {
                 throw "";
             }
@@ -387,6 +388,7 @@ app.post("/file/:name/create_note/save", async (req, res) => {
     try {
         let out = await read(note_dir, req.params.name);
         out.data[req.body.name] = { css: req.body.css, html: req.body.html };
+        // console.log(req.body.html);
         await fs.writeFile(note_dir + "/" + req.params.name, JSON.stringify(out));
         res.send(out);
     }
