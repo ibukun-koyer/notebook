@@ -1,0 +1,80 @@
+/* view slide page */
+.wrap-arrow{
+    height: 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top:0;
+}
+.arrow-img{
+    /* transform: rotateZ(-90deg); */
+    width:5rem;
+    height:100%;
+    box-sizing: border-box;
+    transition: .5s;
+}
+.arrow-img:hover{
+    transition: .5s;
+    transform: translateY(0.5rem); 
+}
+.arrow-img:active{
+    transition: .5s;
+    transform: scale(1.1) translateY(0.5rem); 
+}
+.allNotes{
+    height:100%;
+}
+.contain_notes {
+    width:100%;
+    overflow:auto;
+    margin:0;
+    height: 100vh;
+    /* display:flex; */
+    /* justify-content: center; */
+    box-sizing: border-box;
+}
+.wrapNote{
+
+    margin:2rem auto;
+    box-sizing: border-box;
+    overflow:hidden;
+    width:70%;
+    flex-shrink: 0;
+    flex-grow: 1;
+    height:max-content;
+}
+.hide_box{
+    width:0;
+    padding:0;
+    margin:0;
+    height: 0;
+}
+.controls{
+    font-size:2rem;
+    border-radius:1rem;
+    background-color: rgb(31, 31, 31);
+    color: white;
+    margin:1rem;
+    font-weight: 800;
+    padding:1rem;
+    right:3rem;
+    position: absolute;
+    bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition:.5s;
+    box-shadow: 0.05rem 0.05rem 0.4rem 0.1rem grey;
+}
+
+.controls i:hover{
+    transition:.5s;
+    color:violet;
+}
+#grey{
+    color: grey;
+}
+
+

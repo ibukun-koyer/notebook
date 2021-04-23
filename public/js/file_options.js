@@ -24,8 +24,6 @@ const tools = {
                 let endIndex = sel.focusOffset;
 
                 while ((startNode !== null)) {
-                    // sel.getRangeAt(i).surroundContents(tag);
-
 
                     const range = new Range();
                     if (startIndex !== null)
@@ -75,7 +73,7 @@ let currently_selected = home;
 
 fonts = JSON.parse(fonts);
 console.log(fonts);
-const font_size = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72];
+const font_size = ["Small", "Normal", "Large", "Extra-large"];
 const single_tag = ["<area>", "<base>", "<br>", "<col>", "<command>", "<embed>", "<hr>", "<img>", "<input>", "<keygen>", "<link>", "<meta>", "<param>", "<source>", "<track>", "<wbr>"];
 const size_of_divide = 0.3;
 const layout_height_template = "100vh - 4.25rem ";
@@ -538,10 +536,7 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
                 }
             }
             else {
-
                 codearea.value = implement_css_parse(css_input);
-
-
             }
         })
     }
@@ -563,7 +558,7 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
                         range.setEnd(frame_doc.getSelection().anchorNode, offset);
                         frame_win.getSelection().removeAllRanges();
                         frame_win.getSelection().addRange(range);
-                        // console.log(range);
+
                         frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
 
                         const range1 = new Range();
@@ -757,9 +752,9 @@ major_option.addEventListener("click", (e) => {
     if (e.target.name === "insert") {
         console.log("insert");
     }
-    if (e.target.name === "layout") {
-        console.log("layout");
-    }
+    // if (e.target.name === "layout") {
+    //     console.log("layout");
+    // }
     if (e.target.name === "help") {
         console.log("help");
     }

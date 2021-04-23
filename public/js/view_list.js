@@ -37,15 +37,7 @@ for (let i in data) {
     notes[i] = JSON.parse(JSON.stringify(data[i]));
 }
 function fill_str(str) {
-    let ret = "";
-    for (let i = 0; i < 23; i++) {
-        if ((i >= str.length) || (i >= 20)) {
-            ret += ".";
-        }
-        else {
-            ret += str[i];
-        }
-    }
+    let ret = str + "...";
     return ret;
 }
 
@@ -74,21 +66,24 @@ for (let i in notes) {
                         <div class="hash ${a}">${k}</div>
                         </td> 
                     </tr>`;
+    // k++;
 }
 toc.innerHTML += "</tbody>";
 
 //set note values
 let is_fullscreen = false;
-document.querySelector(".num_of_notes").innerText = Object.keys(notes).length;
-document.querySelector(".is_fit_screen").innerText = is_fullscreen;
-document.querySelector(".zoom_info").innerText = ZOOM + "%";
+if (document.URL.indexOf("list") !== -1) {
+    document.querySelector(".num_of_notes").innerText = Object.keys(notes).length;
+    document.querySelector(".is_fit_screen").innerText = is_fullscreen;
+    document.querySelector(".zoom_info").innerText = ZOOM + "%";
+}
 
 const hash = document.querySelectorAll(".hash");
 const par = document.querySelector(".contain_notes");
 for (let i of hash) {
     i.addEventListener("click", (e) => {
         let id = e.target.className.split(" ")[1];
-        // const loc = document.querySelector("#" + e.target.className.split(" ")[1]);
+
 
         for (let j = 0; j < par.childElementCount; j++) {
             console.log(par.children[j].id, id)
@@ -97,7 +92,6 @@ for (let i of hash) {
                 behavior: 'smooth'
             }) : false;
 
-            // par.children[j].scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
         }
 
     })
@@ -106,67 +100,73 @@ const cover_table = document.querySelector(".coverTable");
 function fix_toc() {
 
     cover_table.style.top = `calc(${window.getComputedStyle(document.querySelector(".contain_type")).height} + 4.2rem)`;
-    // cover_table.style.height = `calc(100vh - ${window.getComputedStyle(document.querySelector(".contain_type")).height} - 4.2rem)`;
+
     cover_table.style.height = "100%";
 }
-// console.log(cover_table.style.top);
-if (note_container !== undefined) {
-    for (let i in notes) {
-        //create divs
-        const wrap_div = document.createElement("div");
-        const header = document.createElement("div");
-        const note = document.createElement("div");
-        // const footer = document.createElement("div");
-        //append them
-        wrap_div.append(header);
-        wrap_div.append(note);
-        // wrap_div.append(footer);
-        note_container.append(wrap_div);
-        //classlist styles
-        header.classList.add("header");
-        wrap_div.classList.add("wrapNote");
-        note.classList.add("note");
-        // footer.classList.add("pageNumber");
-        //add unique note id
-        let unique_id = `note${int} `;
-        wrap_div.setAttribute("id", unique_id);
-        //adding text and css
-        header.innerText = i.slice(1, i.length - 1);
 
-        note.innerHTML = notes[i].html;
-        for (let i = 0; i < note.childElementCount; i++) {
-            note.children[0].style.boxSizing = "border-box";
+if (document.URL.indexOf("list") !== -1) {
+    if (note_container !== undefined) {
+        for (let i in notes) {
+            //create divs
+            const wrap_div = document.createElement("div");
+            const header = document.createElement("div");
+            const note = document.createElement("div");
+
+            //append them
+            wrap_div.append(header);
+            wrap_div.append(note);
+            // wrap_div.append(footer);
+            note_container.append(wrap_div);
+            //classlist styles
+            header.classList.add("header");
+            wrap_div.classList.add("wrapNote");
+            note.classList.add("note");
+
+            //add unique note id
+            let unique_id = `note${int} `;
+            wrap_div.setAttribute("id", unique_id);
+            //adding text and css
+            header.innerText = i.slice(1, i.length - 1);
+
+            note.innerHTML = notes[i].html;
+            for (let i = 0; i < note.childElementCount; i++) {
+                note.children[0].style.boxSizing = "border-box";
+            }
+            document.head.innerHTML += `< style > ${add_specificity_to_css("#" + unique_id, notes[i].css)}</style > `;
+
+
+            int++;
         }
-        document.head.innerHTML += `< style > ${add_specificity_to_css("#" + unique_id, notes[i].css)}</style > `;
-        int++;
-    }
 
+    }
 }
 //resize
 const fit_scr = document.querySelector("#fit-screen");
 const allNotes = document.querySelector(".allNotes");
 function resize(width) {
-
-    if (width < 814) {
-        if (fit_scr.className.indexOf("selectd") === -1) {
-            note_container.style.marginLeft = `${((830 - width) + (ZOOM - 100) * 8 + 1)}px`;
+    if (document.URL.indexOf("list") !== -1) {
+        if (width < 814) {
+            if (fit_scr.className.indexOf("selectd") === -1) {
+                note_container.style.marginLeft = `${((830 - width) + (ZOOM - 100) * 8 + 1)}px`;
+            }
+            else {
+                note_container.style.marginLeft = ``;
+            }
         }
         else {
             note_container.style.marginLeft = ``;
         }
     }
-    else {
-        note_container.style.marginLeft = ``;
-    }
     const scr = document.querySelector("#fit-screen");
     const scr1 = document.querySelector("#cont");
     const scr2 = document.querySelector("#search");
-    // const scr3 = document.querySelector("#back");
+
     try {
-        scr.childNodes[1].remove();
+
         scr1.childNodes[1].remove();
         scr2.childNodes[1].remove();
-        // scr3.childNodes[1].remove();
+        scr.childNodes[1].remove();
+
     }
     catch (e) {
         console.log();
@@ -174,10 +174,11 @@ function resize(width) {
 
     if (width >= 674) {
         try {
-            scr.innerHTML += " Fit screen";
+
             scr1.innerHTML += " Content";
             scr2.innerHTML += " Search";
-            // scr3.innerHTML += " Back";
+            scr.innerHTML += " Fit screen";
+
         }
         catch (e) {
             console.log();
@@ -264,10 +265,34 @@ function focus_curr_search(op, nodeList) {
     }
 
 }
+const search_btn = document.querySelector("#search");
+const search_reg = document.querySelector(".wrap-searcher");
+let current_note = 0;
 function output() {
     const value = document.querySelector(".wrap-search-input input").value;
-    clear_search(par);
-    recursive_search(par, value);
+    if (document.URL.indexOf("list") !== -1) {
+        clear_search(par);
+        recursive_search(par, value);
+    }
+    else {
+        let num = 0;
+        let found = 0;
+        let curr_index = 0;
+        Array.from(par.children).forEach((i) => {
+            if (i.localName !== "script") {
+                if (num === current_note) {
+                    found = curr_index;
+
+                }
+                num++;
+            }
+            curr_index++;
+        })
+        clear_search(par.children[found]);
+        if (search_reg.className.indexOf("show-search") !== -1) {
+            recursive_search(par.children[found], value);
+        }
+    }
     if (value !== "") {
         const out = document.querySelectorAll(".search-result-b");
         end = out.length;
@@ -285,14 +310,14 @@ fix_toc();
 document.querySelector("#cont").addEventListener("click", (e) => {
     cover_table.classList.toggle("show");
 })
-const search_btn = document.querySelector("#search");
-const search_reg = document.querySelector(".wrap-searcher");
+
 search_btn.addEventListener("click", (e) => {
     if (search_reg.className.indexOf("show-search") === -1) {
         search_reg.classList.add("show-search");
         output();
     }
 })
+
 const times = document.querySelector(".i .fa-times");
 times.addEventListener("click", (e) => {
     search_reg.classList.remove("show-search");
@@ -312,57 +337,59 @@ down_search.addEventListener("click", (e) => {
 
 })
 document.querySelector(".wrap-search-input input").addEventListener("input", (e) => {
+
     output();
-})
-
-
-fit_scr.addEventListener("click", () => {
-    fit_scr.classList.toggle("selectd");
-    note_container.classList.toggle("fit");
-    let start = parseFloat(window.getComputedStyle(document.body).width);
-    resize(start);
-    is_fullscreen = !is_fullscreen;
-    document.querySelector(".is_fit_screen").innerText = is_fullscreen;
 
 })
 
-const zoom_in = document.querySelector("#zoom_in");
-const zoom_out = document.querySelector("#zoom_out");
-
-zoom_in.addEventListener("click", () => {
-    if ((ZOOM > MIN_ZOOM) && (fit_scr.className.indexOf("selectd") === -1)) {
-        ZOOM -= ZOOM_INC;
-        document.querySelector(".zoom_info").innerText = ZOOM + "%";
-        let fraction = ZOOM / MIN_ZOOM;
-        let diff_from_hundred = 100 / MIN_ZOOM;
-
-        let new_width = fraction * (WIDTH_OF_PAPER / diff_from_hundred);
-
-        let new_height = new_width * 1.41421;
-        console.log(new_width, new_height);
-
-        note_container.style.width = new_width + "px";
-        note_container.style.height = new_height + "px";
+if (document.URL.indexOf("list") !== -1) {
+    fit_scr.addEventListener("click", () => {
+        fit_scr.classList.toggle("selectd");
+        note_container.classList.toggle("fit");
         let start = parseFloat(window.getComputedStyle(document.body).width);
         resize(start);
-    }
-});
-zoom_out.addEventListener("click", () => {
-    if ((ZOOM < MAX_ZOOM) && (fit_scr.className.indexOf("selectd") === -1)) {
-        ZOOM += ZOOM_INC;
-        document.querySelector(".zoom_info").innerText = ZOOM + "%";
-        let fraction = ZOOM / MIN_ZOOM;
-        let diff_from_hundred = 100 / MIN_ZOOM;
+        is_fullscreen = !is_fullscreen;
+        document.querySelector(".is_fit_screen").innerText = is_fullscreen;
 
-        let new_width = fraction * (WIDTH_OF_PAPER / diff_from_hundred);
+    })
 
-        let new_height = new_width * 1.41421;
-        console.log(new_width, new_height);
+    const zoom_in = document.querySelector("#zoom_in");
+    const zoom_out = document.querySelector("#zoom_out");
 
-        note_container.style.width = new_width + "px";
-        note_container.style.height = new_height + "px";
-        let start = parseFloat(window.getComputedStyle(document.body).width);
-        resize(start);
-    }
-});
+    zoom_in.addEventListener("click", () => {
+        if ((ZOOM > MIN_ZOOM) && (fit_scr.className.indexOf("selectd") === -1)) {
+            ZOOM -= ZOOM_INC;
+            document.querySelector(".zoom_info").innerText = ZOOM + "%";
+            let fraction = ZOOM / MIN_ZOOM;
+            let diff_from_hundred = 100 / MIN_ZOOM;
 
+            let new_width = fraction * (WIDTH_OF_PAPER / diff_from_hundred);
+
+            let new_height = new_width * 1.41421;
+            console.log(new_width, new_height);
+
+            note_container.style.width = new_width + "px";
+            note_container.style.height = new_height + "px";
+            let start = parseFloat(window.getComputedStyle(document.body).width);
+            resize(start);
+        }
+    });
+    zoom_out.addEventListener("click", () => {
+        if ((ZOOM < MAX_ZOOM) && (fit_scr.className.indexOf("selectd") === -1)) {
+            ZOOM += ZOOM_INC;
+            document.querySelector(".zoom_info").innerText = ZOOM + "%";
+            let fraction = ZOOM / MIN_ZOOM;
+            let diff_from_hundred = 100 / MIN_ZOOM;
+
+            let new_width = fraction * (WIDTH_OF_PAPER / diff_from_hundred);
+
+            let new_height = new_width * 1.41421;
+            console.log(new_width, new_height);
+
+            note_container.style.width = new_width + "px";
+            note_container.style.height = new_height + "px";
+            let start = parseFloat(window.getComputedStyle(document.body).width);
+            resize(start);
+        }
+    });
+}

@@ -86,8 +86,6 @@ body{
     overflow:auto;
     z-index: auto;
     box-sizing: border-box;
-    
-    
 }
 
 .header{
@@ -351,3 +349,5 @@ footer >div{
 footer span{
     font-weight: normal;
 }
+
+
