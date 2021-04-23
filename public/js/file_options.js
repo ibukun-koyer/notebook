@@ -65,6 +65,31 @@ const tools = {
         const tag = document.createElement("b");
         tools.surround(body, tag);
 
+    },
+    italic(body) {
+        const tag = document.createElement("i");
+        tools.surround(body, tag);
+
+    },
+    underline(body) {
+        const tag = document.createElement("u");
+        tools.surround(body, tag);
+    },
+    strike_through(body) {
+        const tag = document.createElement("strike");
+        tools.surround(body, tag);
+    },
+    center_align(body) {
+        body.style.textAlign = "center";
+    },
+    justify_align(body) {
+        body.style.textAlign = "justify";
+    },
+    left_align(body) {
+        body.style.textAlign = "left";
+    },
+    right_align(body) {
+        body.style.textAlign = "right";
     }
 }
 
@@ -175,7 +200,6 @@ function drop_down_options(options, name) {
 }
 
 const opt = document.querySelector(".major-options");
-
 function home() {
     const target = document.querySelector(".target");
     target.innerHTML = "";
@@ -205,31 +229,15 @@ function home() {
     const cut = new icon_info(["fas", "fa-cut"], "cut", tools.cut);
     const table = new icon_info(["fas", "fa-table"], "table", tools.table);
     const strikethrough = new icon_info(["fa", "fa-strikethrough"], "strike through", tools.strike_through);
-    //more icons to find
-    //--->calculator icon for calculator functionality
-    //--->map icon for map functionality
-    //--->code icon for code functionality
-    //--->quiz icon for quiz functionality
-    //--->graph icons for graph functionalities
-    //--->image icons for image functionality
-
-    //option for enforce overflow hiddding
-    //by default overflow is not hidden
+    const image = new icon_info(["fa", "fa-image"], "image", tools.image);
 
 
-    // const reg_a = subregion("clipboard", 2, undo, redo);
-
-    // target.append(sub_subregion(reg_a));
-    // target.append(subregion("clipboard", 2, undo, redo, copy, copy))
-
-    const a = subregion("Fix", 2, undo, redo);
-    target.append(a);
-    const b = subregion("Clipboard", 4, cut, copy, paste, print);
-    target.append(b);
     const c = subregion("font", 10, { do_not_calc: true, fxn: drop_down_options(fonts, "fonts") }, { do_not_calc: true, fxn: drop_down_options(font_size, "fontSize") }, bold, italic, underline, strikethrough, subscript, superscript, highlight);
     target.append(c);
     const d = subregion("paragraph", 10, center, justify, left, right, border, text_height, text_width, ol, ul)
     target.append(d);
+    const e = subregion("insert", 10, link, table, image)
+    target.append(e);
 
     //calcuating height
     let height = window.getComputedStyle(opt).height;
@@ -556,19 +564,32 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
                         range.setStart(frame_doc.getSelection().anchorNode, offset - e.data.length);
 
                         range.setEnd(frame_doc.getSelection().anchorNode, offset);
+
+                        // let prev = frame_win.getSelection().getRangeAt(0);
+
+                        // prev.endOffset = prev.startOffset += 1;
+                        // prev.isCollapsed = true;
+
+
+
                         frame_win.getSelection().removeAllRanges();
+
                         frame_win.getSelection().addRange(range);
 
                         frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
 
-                        const range1 = new Range();
-                        range1.setStart(frame_doc.getSelection().anchorNode, e.data.length + 1);
-                        range1.collapse(true);
-                        frame_win.getSelection().removeAllRanges();
-                        frame_win.getSelection().addRange(range1);
+
+                        frame_doc.getSelection().collapseToEnd();
+                        // prev.setPosition(frame_doc.getSelection().anchorNode.nextSibling, 0);
+                        // const range1 = new Range();
+                        // range1.setStart(frame_doc.getSelection().anchorNode, e.data.length + 1);
+                        // range1.collapse(true);
+                        // frame_win.getSelection().removeAllRanges();
+                        // frame_win.getSelection().addRange(range1);
+                        // frame_win.getSelection().addRange(prev);
 
                         paper_data.focus();
-                        // frame_doc.getSelection().anchorNode.textContent = "";
+
                     }
                 }
 
@@ -731,7 +752,7 @@ function create_form(container, ...options) {
     }
 }
 const major_option = document.querySelector(".major-options");
-let current_selection = major_option.children[0].children[1];
+let current_selection = major_option.children[0].children[0];
 current_selection.classList.add("wrapAround");
 
 major_option.addEventListener("click", (e) => {
@@ -749,15 +770,13 @@ major_option.addEventListener("click", (e) => {
         document.body.append(fill);
         create_form(fill, { path: "save", text: "Save progress" }, { path: "save_and_exit", text: "Save and return" }, { path: "cancel", text: "Cancel" });
     }
-    if (e.target.name === "insert") {
-        console.log("insert");
-    }
-    // if (e.target.name === "layout") {
-    //     console.log("layout");
+    // if (e.target.name === "insert") {
+    //     console.log("insert");
     // }
-    if (e.target.name === "help") {
-        console.log("help");
-    }
+
+    // if (e.target.name === "help") {
+    //     console.log("help");
+    // }
     if (e.target.localName === "button") {
         e.target.classList.add("wrapAround");
     }
