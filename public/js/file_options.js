@@ -10,51 +10,99 @@ let curr_file = document.URL.split("/").reduce((x, y) => {
         return x;
     }
 }).slice(5,);
+const list_of_span_tools = ['underline', 'strike'];
+const list_of_nodenames = ["B", "I"];
 console.log(`The file name is ${curr_file}`)
+function popup(body, name_of_tool, tool, callback) {
+    const fill = document.createElement("div");
+    fill.classList.add("fill");
+    fill.classList.add("save-options");
+    document.body.append(fill);
+    const wrap = document.createElement("div");
+    wrap.classList.add("tool-wrap");
+    fill.append(wrap);
+
+    //create label
+    const lab = document.createElement("label");
+    lab.innerText = name_of_tool;
+    lab.setAttribute("for", name_of_tool);
+    lab.setAttribute("id", "label_t");
+
+    wrap.append(lab);
+    for (let i of tool) {
+        wrap.append(i);
+    }
+
+    //create button
+    const sub = document.createElement("button");
+    sub.innerText = "submit";
+    sub.classList.add("green_btn");
+    wrap.append(sub);
+
+    sub.addEventListener("click", () => {
+        callback();
+        fill.remove();
+    })
+}
 const tools = {
-    surround(body, tag) {
+    surround(body, tag, css) {
 
         let sel = frame_doc.getSelection();
-        console.dir(sel);
         if (frame_doc.getSelection().isCollapsed !== true) {
-            for (let i = 0; i < sel.rangeCount; i++) {
-                let startNode = sel.anchorNode;
-                let startIndex = sel.anchorOffset;
-                let endNode = sel.focusNode;
-                let endIndex = sel.focusOffset;
-
-                while ((startNode !== null)) {
-
-                    const range = new Range();
-                    if (startIndex !== null)
-                        range.setStart(startNode, startIndex);
-                    else
-                        range.setStart(startNode, 0);
-                    startIndex = null;
-
-                    if ((startNode.nextSibling === endNode) || (startNode.nextSibling === null))
-                        range.setEnd(startNode, endIndex);
-                    else
-                        range.setEnd(startNode, startNode.length);
-
-
-
-                    frame_win.getSelection().removeAllRanges();
-                    frame_win.getSelection().addRange(range);
-                    console.log(range);
-                    sel.getRangeAt(0).surroundContents(tag);
-
-                    startNode = startNode.nextSibling;
-
-                }
-
-            }
+            tag.appendChild(sel.getRangeAt(0).extractContents());
+            sel.getRangeAt(0).insertNode(tag);
         }
         else {
-            for (let i = 0; i < sel.rangeCount; i++) {
-                sel.getRangeAt(i).insertNode(tag);
+            let currNode = sel.anchorNode;
+            while (currNode !== null) {
+                let str = `no${tag.nodeName}`;
+                try {
+                    if (list_of_span_tools.indexOf(currNode.className) !== -1) {
+                        str = `no${currNode.className}`;
+                    }
+                }
+                catch (e) {
+                    console.log('classname not defined');
+                }
+
+                if ((currNode.nodeName === tag.nodeName) && (currNode.nodeName !== undefined)) {
+                    if (currNode.nodeName === "SPAN") {
+                        if (list_of_span_tools.indexOf(currNode.className) === -1) {
+                            currNode = currNode.parentElement;
+                            continue;
+                        }
+                    }
+                    const div = document.createElement("span");
+                    div.setAttribute("id", str);
+                    div.setAttribute("style", css);
+                    for (let i = 0; i < sel.rangeCount; i++) {
+                        sel.getRangeAt(i).insertNode(div);
+
+                    }
+                    break;
+
+
+                }
+                else if ((currNode.getAttribute !== undefined) && (currNode.getAttribute("id") === str)) {
+                    for (let i = 0; i < sel.rangeCount; i++) {
+                        sel.getRangeAt(i).insertNode(tag);
+                    }
+                    break;
+                }
+                else if (currNode.parentElement === null) {
+
+                    for (let i = 0; i < sel.rangeCount; i++) {
+                        sel.getRangeAt(i).insertNode(tag);
+
+                    }
+                    break;
+                }
+
+                currNode = currNode.parentElement;
+
 
             }
+
 
         }
         body.focus();
@@ -63,21 +111,24 @@ const tools = {
     },
     bold(body) {
         const tag = document.createElement("b");
-        tools.surround(body, tag);
-
+        tools.surround(body, tag, 'font-weight: normal;');
     },
     italic(body) {
         const tag = document.createElement("i");
-        tools.surround(body, tag);
+        tools.surround(body, tag, 'font-style: normal;');
 
     },
     underline(body) {
-        const tag = document.createElement("u");
-        tools.surround(body, tag);
+        const tag = document.createElement("span");
+        tag.style = "text-decoration:underline;";
+        tag.classList.add('underline');
+        tools.surround(body, tag, 'display: inline-block;text-decoration:none;');
     },
     strike_through(body) {
-        const tag = document.createElement("strike");
-        tools.surround(body, tag);
+        const tag = document.createElement("span");
+        tag.style = "text-decoration:line-through;";
+        tag.classList.add('strike');
+        tools.surround(body, tag, 'display: inline-block;text-decoration:none;');
     },
     center_align(body) {
         body.style.textAlign = "center";
@@ -90,6 +141,94 @@ const tools = {
     },
     right_align(body) {
         body.style.textAlign = "right";
+    },
+    save(body) {
+        const fill = document.createElement("div");
+        fill.classList.add("fill");
+        fill.classList.add("save-options");
+        document.body.append(fill);
+        create_form(fill, { path: "save", text: "Save progress" }, { path: "save_and_exit", text: "Save and return" }, { path: "cancel", text: "Cancel" });
+    },
+    margin(body) {
+        let name_of_tool = "Margin";
+
+        const margin_range = document.createElement("input");
+        margin_range.style.width = "100%";
+        margin_range.setAttribute("id", name_of_tool);
+        margin_range.setAttribute("type", "range");
+        margin_range.setAttribute("max", 5);
+        margin_range.setAttribute("min", 0);
+        margin_range.value = 0;
+
+        const callback = function () {
+            body.style.padding = `${margin_range.value}rem`;
+        }
+
+        popup(body, name_of_tool, [margin_range], callback);
+    },
+    text_height(body) {
+        let name_of_tool = "Text-height";
+
+        const text_height_range = document.createElement("input");
+        text_height_range.style.width = "100%";
+        text_height_range.setAttribute("id", name_of_tool);
+        text_height_range.setAttribute("type", "range");
+        text_height_range.setAttribute("max", 5);
+        text_height_range.setAttribute("min", 1);
+        text_height_range.value = 0;
+
+        const callback = function () {
+            body.style.lineHeight = `${text_height_range.value}rem`;
+        }
+
+        popup(body, name_of_tool, [text_height_range], callback);
+    },
+    text_width(body) {
+        let name_of_tool = "Text-spacing";
+
+        const text_width_range = document.createElement("input");
+        text_width_range.style.width = "100%";
+        text_width_range.setAttribute("id", name_of_tool);
+        text_width_range.setAttribute("type", "range");
+        text_width_range.setAttribute("max", 5);
+        text_width_range.setAttribute("min", 1);
+        text_width_range.value = 0;
+
+        const callback = function () {
+            body.style.letterSpacing = `${text_width_range.value}rem`;
+        }
+
+        popup(body, name_of_tool, [text_width_range], callback);
+    },
+    link(body) {
+        let name_of_tool = "Link";
+
+        const link = document.createElement("input");
+        link.style.width = "100%";
+        link.setAttribute("id", name_of_tool);
+        link.setAttribute("type", "text");
+        link.setAttribute("placeholder", "Please enter your link");
+
+        const link_name = document.createElement("input");
+        link_name.style.width = "100%";
+        // link_name.setAttribute("id", name_of_tool);
+        link_name.setAttribute("type", "text");
+        link_name.setAttribute("placeholder", "Please enter link's display name");
+
+
+
+        const callback = function () {
+            let sel = frame_doc.getSelection();
+            // body.style.letterSpacing = `${link.value}rem`;
+            const anc = document.createElement("a");
+            anc.setAttribute('href', link.value);
+            anc.innerText = link_name.value;
+            console.log(anc);
+            body.append(anc);
+            // sel.getRangeAt(0).insertNode(anc);
+        }
+
+        popup(body, name_of_tool, [link, link_name], callback);
     }
 }
 
@@ -230,11 +369,19 @@ function home() {
     const table = new icon_info(["fas", "fa-table"], "table", tools.table);
     const strikethrough = new icon_info(["fa", "fa-strikethrough"], "strike through", tools.strike_through);
     const image = new icon_info(["fa", "fa-image"], "image", tools.image);
+    const save = new icon_info(["fa", "fa-bars"], "save", tools.save);
+    const font_color = new icon_info(["fas", "fa-eye-dropper"], "font color", tools.font_color);
+    const margin = new icon_info(["fa", "fa-indent"], "margin", tools.margin);
 
-
-    const c = subregion("font", 10, { do_not_calc: true, fxn: drop_down_options(fonts, "fonts") }, { do_not_calc: true, fxn: drop_down_options(font_size, "fontSize") }, bold, italic, underline, strikethrough, subscript, superscript, highlight);
+    // <i class="fa fa-indent" aria-hidden="true"></i>
+    // <i class="fa fa-arrows" aria-hidden="true"></i>
+    // <i class="fa fa-eyedropper" aria-hidden="true"></i>
+    // <i class="fa fa-bars" aria-hidden="true"></i>
+    const b = subregion("file", 10, save);
+    target.append(b);
+    const c = subregion("font", 10, { do_not_calc: true, fxn: drop_down_options(fonts, "fonts") }, { do_not_calc: true, fxn: drop_down_options(font_size, "fontSize") }, font_color, highlight, bold, italic, underline, strikethrough, subscript, superscript);
     target.append(c);
-    const d = subregion("paragraph", 10, center, justify, left, right, border, text_height, text_width, ol, ul)
+    const d = subregion("paragraph", 10, center, justify, left, right, margin, text_height, text_width, ol, ul)
     target.append(d);
     const e = subregion("insert", 10, link, table, image)
     target.append(e);
@@ -556,46 +703,67 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
             try {
                 if (frame_doc.getSelection().anchorNode.nextSibling.innerHTML.length === 0) {
                     if (frame_doc.getSelection().anchorNode.length === frame_doc.getSelection().anchorOffset) {
-                        // frame_doc.getSelection().anchorNode.nextSibling.innerHTML += e.data;
 
                         const offset = frame_doc.getSelection().anchorOffset;
                         const range = new Range();
-                        console.log(e.data.length);
+
                         range.setStart(frame_doc.getSelection().anchorNode, offset - e.data.length);
-
                         range.setEnd(frame_doc.getSelection().anchorNode, offset);
-
-                        // let prev = frame_win.getSelection().getRangeAt(0);
-
-                        // prev.endOffset = prev.startOffset += 1;
-                        // prev.isCollapsed = true;
-
 
 
                         frame_win.getSelection().removeAllRanges();
 
                         frame_win.getSelection().addRange(range);
 
-                        frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
+                        // frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
 
 
+                        // frame_doc.getSelection().collapseToEnd();
+
+                        frame_doc.getSelection().anchorNode.nextSibling.appendChild(frame_doc.getSelection().getRangeAt(0).extractContents());
+                        frame_doc.getSelection().getRangeAt(0).insertNode(frame_doc.getSelection().anchorNode.nextSibling);
                         frame_doc.getSelection().collapseToEnd();
-                        // prev.setPosition(frame_doc.getSelection().anchorNode.nextSibling, 0);
-                        // const range1 = new Range();
-                        // range1.setStart(frame_doc.getSelection().anchorNode, e.data.length + 1);
-                        // range1.collapse(true);
-                        // frame_win.getSelection().removeAllRanges();
-                        // frame_win.getSelection().addRange(range1);
-                        // frame_win.getSelection().addRange(prev);
+
 
                         paper_data.focus();
 
                     }
                 }
-
             }
-            catch (e) {
-                console.log(e);
+            catch (err) {
+                try {
+                    if ((frame_doc.getSelection().anchorNode.previousElementSibling.innerHTML.length === 0) && (frame_doc.getSelection().anchorNode.previousElementSibling.previousElementSibling === null)) {
+
+
+                        const offset = frame_doc.getSelection().anchorOffset;
+                        const range = new Range();
+
+                        range.setStart(frame_doc.getSelection().anchorNode, 0);
+                        range.setEnd(frame_doc.getSelection().anchorNode, e.data.length);
+
+                        console.log("3")
+                        frame_win.getSelection().removeAllRanges();
+
+                        frame_win.getSelection().addRange(range);
+                        console.log("4")
+                        // frame_doc.getSelection().getRangeAt(0).surroundContents(frame_doc.getSelection().anchorNode.nextSibling);
+
+
+                        // frame_doc.getSelection().collapseToEnd();
+
+                        frame_doc.getSelection().anchorNode.previousElementSibling.appendChild(frame_doc.getSelection().getRangeAt(0).extractContents());
+                        frame_doc.getSelection().getRangeAt(0).insertNode(frame_doc.getSelection().anchorNode.previousElementSibling);
+                        frame_doc.getSelection().collapseToEnd();
+
+
+                        paper_data.focus();
+
+
+                    }
+                }
+                catch (e) {
+                    console.log('its neither end nor beginning', e);
+                }
             }
         }
 
@@ -605,6 +773,26 @@ document.querySelector("iframe").contentWindow.addEventListener('DOMContentLoade
         }
 
     });
+    // frame_doc.addEventListener('selectionchange', () => {
+    //     const signature_names = [...list_of_nodenames];
+    //     const signature_span = [...list_of_span_tools];
+
+    //     let currNode = frame_doc.getSelection().anchorNode;
+    //     if (currNode.isCollapsed === true) {
+    //         while (currNode !== null) {
+    //             let nodeName = currNode.nodeName;
+    //             let className = currNode.className;
+
+    //             if (nodeName === "SPAN") {
+
+    //             }
+    //             else {
+
+    //             }
+    //             currNode = currNode.parentElement;
+    //         }
+    //     }
+    // })
 
     codearea.addEventListener("input", (e) => {
 
@@ -751,33 +939,18 @@ function create_form(container, ...options) {
 
     }
 }
-const major_option = document.querySelector(".major-options");
-let current_selection = major_option.children[0].children[0];
-current_selection.classList.add("wrapAround");
+//edit fontsize on display
+const font_select = document.querySelectorAll('#fontSize option');
+let start_i = 1;
+let inc = 2;
+for (let i of font_select) {
+    i.style.fontSize = `${start_i}rem`;
+    start_i++;
+}
+//edit font family on display
+const font_fam_select = document.querySelectorAll('#fonts option');
 
-major_option.addEventListener("click", (e) => {
-    if (e.target.localName === "button") {
-        current_selection.classList.remove("wrapAround");
-        current_selection = e.target;
-    }
-    if (e.target.name === "home") {
-        console.log("home");
-    }
-    if (e.target.name === "file") {
-        const fill = document.createElement("div");
-        fill.classList.add("fill");
-        fill.classList.add("save-options");
-        document.body.append(fill);
-        create_form(fill, { path: "save", text: "Save progress" }, { path: "save_and_exit", text: "Save and return" }, { path: "cancel", text: "Cancel" });
-    }
-    // if (e.target.name === "insert") {
-    //     console.log("insert");
-    // }
-
-    // if (e.target.name === "help") {
-    //     console.log("help");
-    // }
-    if (e.target.localName === "button") {
-        e.target.classList.add("wrapAround");
-    }
-})
+for (let i of font_fam_select) {
+    i.style.fontFamily = i.innerText;
+    start_i++;
+}
